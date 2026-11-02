@@ -22,7 +22,8 @@ Componente de tema de Discourse que muestra precios cripto actuales en USD desde
 - **Precios en USD**, con dos decimales desde $1 y cuatro por debajo de $1.
 - **Una línea con la dirección en 24 horas**, hacia arriba o hacia abajo, en el color del texto. El porcentaje nunca se muestra.
 - **Una línea «actualizado hace X min»**, tomada de las marcas de tiempo de CoinGecko.
-- **Monedas y orden definidos en los ajustes del tema**, sin tocar código.
+- **Un enlace a CoinGecko** en el crédito, que abre en otra pestaña con `rel="noopener noreferrer"`, así no se envía el referrer.
+- **Título, monedas y orden definidos en los ajustes del tema**, sin tocar código.
 - **Actualización cada 5 minutos** mientras la pestaña está visible. Al volver a una lista de temas se reutilizan los últimos precios, sin llamar de nuevo a CoinGecko.
 - **Sin backend y sin clave de API.**
 
@@ -32,8 +33,6 @@ Componente de tema de Discourse que muestra precios cripto actuales en USD desde
 |---|---|
 | [Right Sidebar Blocks](https://github.com/discourse/discourse-right-sidebar-blocks) | Coloca la tarjeta en la barra lateral |
 | [discourse-phosphor-duotone-icons](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) | Aporta los iconos por defecto, incluido `ph-dt-ingot` para PAXG |
-
-`ph-dt-ingot` está en la rama `feat/ingot-icon` de ese componente hasta que se fusione. Sin él, la fila de PAXG queda con el icono en blanco.
 
 ## Instalación
 
@@ -48,6 +47,8 @@ Componente de tema de Discourse que muestra precios cripto actuales en USD desde
 La barra lateral se ve solo en las listas de temas de escritorio, nunca en las páginas de un tema ni en teléfonos.
 
 ## Ajustes
+
+`title` define el título de la tarjeta. Vacío usa el valor por defecto, «Precios» ("Prices" en inglés).
 
 `tickers` define las monedas y su orden. Usá mover arriba y mover abajo en el editor para reordenarlas.
 

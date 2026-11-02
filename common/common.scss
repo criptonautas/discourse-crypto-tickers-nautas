@@ -5,9 +5,14 @@
 }
 
 .crypto-tickers {
+  &__title {
+    margin: 0 0 var(--space-2);
+  }
+
   &__list {
     margin: 0;
     list-style: none;
+    font-size: var(--font-down-1);
   }
 
   &__row {

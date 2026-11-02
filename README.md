@@ -22,7 +22,8 @@ Discourse theme component showing current crypto prices in USD from CoinGecko, f
 - **Prices in USD**, with two decimals at $1 or more and four below $1.
 - **A line for the 24-hour direction**, up or down, in the text colour. The percentage is never shown.
 - **An "updated X min ago" line**, taken from CoinGecko's own timestamps.
-- **Coins and order set in the theme settings**, with no code changes.
+- **A link to CoinGecko** on the credit, opening in a new tab with `rel="noopener noreferrer"`, so no referrer is sent.
+- **Title, coins and order set in the theme settings**, with no code changes.
 - **Refresh every 5 minutes** while the tab is visible. Returning to a topic list reuses the last prices instead of calling CoinGecko again.
 - **No backend and no API key.**
 
@@ -32,8 +33,6 @@ Discourse theme component showing current crypto prices in USD from CoinGecko, f
 |---|---|
 | [Right Sidebar Blocks](https://github.com/discourse/discourse-right-sidebar-blocks) | Places the card in the sidebar |
 | [discourse-phosphor-duotone-icons](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) | Provides the default icons, including `ph-dt-ingot` for PAXG |
-
-`ph-dt-ingot` is on that component's `feat/ingot-icon` branch until it is merged. Without it, the PAXG row has a blank icon.
 
 ## Install
 
@@ -48,6 +47,8 @@ Discourse theme component showing current crypto prices in USD from CoinGecko, f
 The sidebar shows on desktop topic lists only, never on topic pages or phones.
 
 ## Settings
+
+`title` sets the card title. Empty uses the default, "Prices" ("Precios" in Spanish).
 
 `tickers` sets the coins and their order. Use move up and move down in the editor to reorder them.
 
