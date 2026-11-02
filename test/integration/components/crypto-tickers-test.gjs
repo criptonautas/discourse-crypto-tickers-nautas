@@ -1,10 +1,9 @@
-import { render } from "@ember/test-helpers";
+import { render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import CryptoTickers from "../../../discourse/components/crypto-tickers";
 
-const flush = () => new Promise((resolve) => setTimeout(resolve));
 const MINUTE = 60 * 1000;
 
 function jsonResponse(body) {
@@ -30,6 +29,11 @@ function liveQuotes() {
   };
 }
 
+// The updated line renders only once quotes arrive, so it marks a loaded card.
+function waitForQuotes() {
+  return waitUntil(() => document.querySelector(".crypto-tickers__updated"));
+}
+
 module("Integration | Component | crypto-tickers", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -52,7 +56,8 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     this.fetchStub.callsFake(() => jsonResponse(liveQuotes()));
 
     await render(<template><CryptoTickers /></template>);
-    await flush();
+    await waitForQuotes();
+    await settled();
 
     const url = new URL(this.fetchStub.firstCall.args[0]);
     assert.strictEqual(url.searchParams.get("ids"), "nano,bitcoin,not-a-coin");
@@ -75,7 +80,8 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     this.fetchStub.callsFake(() => jsonResponse(liveQuotes()));
 
     await render(<template><CryptoTickers /></template>);
-    await flush();
+    await waitForQuotes();
+    await settled();
 
     assert
       .dom(".crypto-tickers .d-icon-ph-dt-chart-line-down")
@@ -92,7 +98,8 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     this.fetchStub.callsFake(() => jsonResponse(liveQuotes()));
 
     await render(<template><CryptoTickers /></template>);
-    await flush();
+    await waitForQuotes();
+    await settled();
 
     assert.dom(".crypto-tickers__updated .relative-date").exists();
     assert.dom(".crypto-tickers__credit").hasText("USD · CoinGecko");
@@ -104,7 +111,8 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     this.fetchStub.callsFake(() => jsonResponse(quotes));
 
     await render(<template><CryptoTickers /></template>);
-    await flush();
+    await waitForQuotes();
+    await settled();
 
     const prices = [...document.querySelectorAll(".crypto-tickers__price")];
     assert.strictEqual(prices[1].textContent.trim(), "—");
@@ -116,7 +124,8 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     );
 
     await render(<template><CryptoTickers /></template>);
-    await flush();
+    await waitUntil(() => document.querySelector(".crypto-tickers.--hidden"));
+    await settled();
 
     assert.dom(".crypto-tickers.--hidden").exists();
     assert.dom(".crypto-tickers__row").doesNotExist();
@@ -127,12 +136,16 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     this.fetchStub.onSecondCall().rejects(new Error("network"));
 
     await render(<template><CryptoTickers /></template>);
-    await flush();
+    await waitForQuotes();
+    await settled();
 
     const start = Date.now();
     sinon.stub(Date, "now").returns(start + 6 * MINUTE);
     document.dispatchEvent(new Event("visibilitychange"));
-    await flush();
+    await waitUntil(() => this.fetchStub.callCount === 2);
+    // Let the rejected request finish its handler before asserting on the DOM.
+    await this.fetchStub.lastCall.returnValue.catch(() => {});
+    await settled();
 
     assert.strictEqual(this.fetchStub.callCount, 2);
     assert.dom(".crypto-tickers__row").exists({ count: 3 });
@@ -143,10 +156,11 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     this.fetchStub.callsFake(() => jsonResponse(liveQuotes()));
 
     await render(<template><CryptoTickers /></template>);
-    await flush();
+    await waitForQuotes();
+    await settled();
 
     document.dispatchEvent(new Event("visibilitychange"));
-    await flush();
+    await settled();
 
     assert.strictEqual(this.fetchStub.callCount, 1);
   });
