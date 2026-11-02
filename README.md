@@ -32,7 +32,7 @@ Discourse theme component showing current crypto prices in USD from CoinGecko, f
 | Needed | Why |
 |---|---|
 | [Right Sidebar Blocks](https://github.com/discourse/discourse-right-sidebar-blocks) | Places the card in the sidebar |
-| [discourse-phosphor-duotone-icons](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) | Provides the default icons; this component ships `ph-dt-ingot` for PAXG itself |
+| [discourse-phosphor-duotone-icons](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) | Provides the default icons, including `ph-dt-ingot` for PAXG |
 
 ## Install
 
@@ -83,7 +83,6 @@ CoinGecko's keyless API limits requests per IP address and publishes no number f
 | `javascripts/discourse/components/crypto-tickers.gjs` | Fetching, refresh and rendering |
 | `javascripts/discourse/lib/quotes.js` | Price formatting, direction and the 15-minute rule |
 | `common/common.scss` | Card styles |
-| `assets/icons-sprite.svg` | The `ph-dt-ingot` icon |
 | `locales/en.yml`, `locales/es.yml` | Copy and setting descriptions |
 | `test/` | QUnit unit and integration tests |
 | `.github/workflows/discourse-theme.yml` | Lint and tests in CI |
