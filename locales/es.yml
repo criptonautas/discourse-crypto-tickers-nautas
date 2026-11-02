@@ -1,0 +1,12 @@
+es:
+  theme_metadata:
+    description: "Precios cripto actuales en USD desde CoinGecko, para la barra lateral derecha"
+    settings:
+      tickers: "Monedas que muestra la tarjeta, en este orden. `coingecko_id` es la última parte de la URL de la moneda en CoinGecko, como `monero` en `coingecko.com/en/coins/monero`. `icon` es un nombre de icono y puede quedar vacío. La tarjeta se coloca con Right Sidebar Blocks usando `{\"name\": \"crypto-tickers\"}`."
+  crypto_tickers:
+    updated: "actualizado"
+    row:
+      up: "%{ticker}, %{price} USD, sube en 24 horas"
+      down: "%{ticker}, %{price} USD, baja en 24 horas"
+      flat: "%{ticker}, %{price} USD"
+      unavailable: "%{ticker}, sin precio disponible"

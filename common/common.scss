@@ -1,0 +1,48 @@
+// The sidebar wraps this in a card; without this rule a failed load leaves an
+// empty card behind.
+.rs-component:has(.crypto-tickers.--hidden) {
+  display: none;
+}
+
+.crypto-tickers {
+  &__list {
+    margin: 0;
+    list-style: none;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-block: var(--space-1);
+  }
+
+  &__icon,
+  &__direction {
+    flex: 0 0 1.25em;
+    display: inline-flex;
+    justify-content: center;
+    color: var(--primary);
+  }
+
+  &__ticker {
+    font-weight: bold;
+  }
+
+  &__price {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__updated,
+  &__credit {
+    margin: 0;
+    text-align: center;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+  }
+
+  &__updated {
+    margin-top: var(--space-3);
+  }
+}

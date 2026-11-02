@@ -1,0 +1,12 @@
+en:
+  theme_metadata:
+    description: "Current crypto prices in USD from CoinGecko, for the right sidebar"
+    settings:
+      tickers: "Coins shown in the card, in this order. `coingecko_id` is the last part of the coin's CoinGecko page URL, such as `monero` in `coingecko.com/en/coins/monero`. `icon` is an icon name and may be empty. Place the card with Right Sidebar Blocks using `{\"name\": \"crypto-tickers\"}`."
+  crypto_tickers:
+    updated: "updated"
+    row:
+      up: "%{ticker}, %{price} USD, up over 24 hours"
+      down: "%{ticker}, %{price} USD, down over 24 hours"
+      flat: "%{ticker}, %{price} USD"
+      unavailable: "%{ticker}, no price available"
