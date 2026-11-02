@@ -41,6 +41,8 @@ module("Integration | Component | crypto-tickers", function (hooks) {
 
   hooks.beforeEach(function () {
     this.originalTickers = settings.tickers;
+    this.originalTitle = settings.title;
+    settings.title = "";
     settings.tickers = [
       { coingecko_id: "nano", ticker: "XNO", icon: "ph-dt-lightning" },
       { coingecko_id: "bitcoin", ticker: "BTC", icon: "ph-dt-btc" },
@@ -54,6 +56,8 @@ module("Integration | Component | crypto-tickers", function (hooks) {
 
   hooks.afterEach(function () {
     settings.tickers = this.originalTickers;
+    settings.title = this.originalTitle;
+    resetCryptoTickersCache();
     sinon.restore();
   });
 
@@ -108,6 +112,27 @@ module("Integration | Component | crypto-tickers", function (hooks) {
 
     assert.dom(".crypto-tickers__updated .relative-date").exists();
     assert.dom(".crypto-tickers__credit").hasText("USD · CoinGecko");
+    assert
+      .dom(".crypto-tickers__credit a")
+      .hasAttribute("href", "https://www.coingecko.com")
+      .hasAttribute("target", "_blank")
+      .hasAttribute("rel", "noopener noreferrer");
+  });
+
+  test("shows the default title, or the one from settings", async function (assert) {
+    this.fetchStub.callsFake(() => jsonResponse(liveQuotes()));
+
+    await render(<template><CryptoTickers /></template>);
+    await waitForQuotes();
+    await settled();
+
+    assert.dom(".crypto-tickers__title").hasText("Prices");
+
+    settings.title = "Market";
+    await render(<template><CryptoTickers /></template>);
+    await settled();
+
+    assert.dom(".crypto-tickers__title").hasText("Market");
   });
 
   test("a stale quote shows a dash", async function (assert) {
@@ -179,6 +204,27 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     await settled();
 
     await render(<template><CryptoTickers /></template>);
+    await settled();
+
+    assert.strictEqual(this.fetchStub.callCount, 1);
+    assert.dom(".crypto-tickers__price").hasText("0.3258");
+  });
+
+  test("a remount during the first request receives its result", async function (assert) {
+    let respond;
+    this.fetchStub.callsFake(
+      () =>
+        new Promise((resolve) => {
+          respond = resolve;
+        })
+    );
+
+    await render(<template><CryptoTickers /></template>);
+    await render(<template><CryptoTickers /></template>);
+    assert.dom(".crypto-tickers.--hidden").doesNotExist();
+
+    respond(new Response(JSON.stringify(liveQuotes()), { status: 200 }));
+    await waitForQuotes();
     await settled();
 
     assert.strictEqual(this.fetchStub.callCount, 1);

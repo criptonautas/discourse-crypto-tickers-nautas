@@ -19,15 +19,40 @@ const DIRECTION_ICONS = {
 // Module level so a remount (returning to a topic list) reuses prices instead of refetching.
 let lastQuotes = null;
 let lastRequest = 0;
+let lastFailed = false;
+let pendingRequest = null;
 
 export function resetCryptoTickersCache() {
   lastQuotes = null;
   lastRequest = 0;
+  lastFailed = false;
+  pendingRequest = null;
+}
+
+async function loadQuotes(tickers) {
+  const url = new URL(API_URL);
+  url.search = new URLSearchParams({
+    ids: tickers.map((ticker) => ticker.coingecko_id).join(","),
+    vs_currencies: "usd",
+    include_24hr_change: "true",
+    include_last_updated_at: "true",
+  });
+
+  let quotes = null;
+  try {
+    const response = await fetch(url.toString());
+    quotes = response.ok ? await response.json() : null;
+  } catch {
+    // A failure is handled below: keep the last prices, or hide without any.
+  }
+
+  lastQuotes = quotes || lastQuotes;
+  lastFailed = !lastQuotes;
 }
 
 export default class CryptoTickers extends Component {
   @tracked quotes = lastQuotes;
-  @tracked failed = lastRequest > 0 && !lastQuotes;
+  @tracked failed = lastFailed;
   @tracked now = Date.now();
 
   constructor() {
@@ -42,7 +67,14 @@ export default class CryptoTickers extends Component {
 
     if (Date.now() - lastRequest >= REFRESH_MS) {
       this.refresh();
+    } else if (pendingRequest) {
+      // A remount during the first request must still receive its result.
+      this.applyPendingRequest();
     }
+  }
+
+  get title() {
+    return settings.title || i18n(themePrefix("crypto_tickers.title"));
   }
 
   get tickers() {
@@ -99,30 +131,19 @@ export default class CryptoTickers extends Component {
     }
 
     lastRequest = Date.now();
-    const url = new URL(API_URL);
-    url.search = new URLSearchParams({
-      ids: this.tickers.map((ticker) => ticker.coingecko_id).join(","),
-      vs_currencies: "usd",
-      include_24hr_change: "true",
-      include_last_updated_at: "true",
-    });
+    pendingRequest = loadQuotes(this.tickers);
+    await this.applyPendingRequest();
+  }
 
-    let quotes = null;
-    try {
-      const response = await fetch(url.toString());
-      quotes = response.ok ? await response.json() : null;
-    } catch {
-      // A failure is handled below: keep the last prices, or hide without any.
-    }
-
-    lastQuotes = quotes || lastQuotes;
+  async applyPendingRequest() {
+    await pendingRequest;
 
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
 
     this.quotes = lastQuotes;
-    this.failed = !lastQuotes;
+    this.failed = lastFailed;
     this.now = Date.now();
   }
 
@@ -132,6 +153,8 @@ export default class CryptoTickers extends Component {
       <div class="crypto-tickers --hidden"></div>
     {{else}}
       <div class="crypto-tickers">
+        <h3 class="crypto-tickers__title">{{this.title}}</h3>
+
         <ul class="crypto-tickers__list">
           {{#each this.rows key="ticker" as |row|}}
             <li>
@@ -156,7 +179,14 @@ export default class CryptoTickers extends Component {
             {{this.updatedAge}}
           </p>
         {{/if}}
-        <p class="crypto-tickers__credit">USD · CoinGecko</p>
+        <p class="crypto-tickers__credit">
+          USD ·
+          <a
+            href="https://www.coingecko.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >CoinGecko</a>
+        </p>
       </div>
     {{/if}}
   </template>
