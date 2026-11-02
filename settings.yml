@@ -1,0 +1,30 @@
+tickers:
+  type: objects
+  default:
+    - coingecko_id: bitcoin
+      ticker: BTC
+      icon: ph-dt-btc
+    - coingecko_id: ethereum
+      ticker: ETH
+      icon: ph-dt-eth
+    - coingecko_id: monero
+      ticker: XMR
+      icon: ph-dt-xmr
+    - coingecko_id: pax-gold
+      ticker: PAXG
+      icon: ph-dt-ingot
+    - coingecko_id: nano
+      ticker: XNO
+      icon: ph-dt-lightning
+  schema:
+    name: ticker
+    identifier: coingecko_id
+    properties:
+      coingecko_id:
+        type: string
+        required: true
+      ticker:
+        type: string
+        required: true
+      icon:
+        type: string

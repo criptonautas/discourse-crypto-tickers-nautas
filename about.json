@@ -1,0 +1,12 @@
+{
+  "name": "Crypto Tickers",
+  "component": true,
+  "authors": "Criptonautas",
+  "about_url": "https://github.com/somos-criptonautas/discourse-crypto-tickers-nautas",
+  "license_url": "https://github.com/somos-criptonautas/discourse-crypto-tickers-nautas/blob/main/LICENSE",
+  "theme_version": "0.0.1",
+  "minimum_discourse_version": null,
+  "maximum_discourse_version": null,
+  "assets": {},
+  "modifiers": {}
+}
