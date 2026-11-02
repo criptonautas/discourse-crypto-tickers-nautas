@@ -2,7 +2,7 @@ en:
   theme_metadata:
     description: "Current crypto prices in USD from CoinGecko, for the right sidebar"
     settings:
-      title: "Card title. Empty uses the default, "Prices"."
+      title: "Card title. Empty uses the default, Prices."
       tickers: "Coins shown in the card, in this order. `coingecko_id` is the last part of the coin's CoinGecko page URL, such as `monero` in `coingecko.com/en/coins/monero`. `icon` is an icon name and may be empty. Place the card with Right Sidebar Blocks using `{\"name\": \"crypto-tickers\"}`."
   crypto_tickers:
     title: "Prices"
