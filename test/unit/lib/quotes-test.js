@@ -49,6 +49,10 @@ module("Unit | crypto-tickers | quotes", function () {
       newestUpdate({ a: { last_updated_at: 10 }, b: { last_updated_at: 20 } }),
       20000
     );
+    assert.strictEqual(
+      newestUpdate({ a: { last_updated_at: 10 }, b: {} }),
+      10000
+    );
     assert.strictEqual(newestUpdate({}), null);
     assert.strictEqual(newestUpdate(null), null);
   });

@@ -16,11 +16,19 @@ const DIRECTION_ICONS = {
   down: "ph-dt-chart-line-down",
 };
 
-export default class CryptoTickers extends Component {
-  @tracked quotes = null;
-  @tracked failed = false;
-  @tracked now = Date.now();
+// Module level so a remount (returning to a topic list) reuses prices instead of refetching.
+let lastQuotes = null;
+let lastRequest = 0;
+
+export function resetCryptoTickersCache() {
+  lastQuotes = null;
   lastRequest = 0;
+}
+
+export default class CryptoTickers extends Component {
+  @tracked quotes = lastQuotes;
+  @tracked failed = lastRequest > 0 && !lastQuotes;
+  @tracked now = Date.now();
 
   constructor() {
     super(...arguments);
@@ -32,7 +40,9 @@ export default class CryptoTickers extends Component {
       document.removeEventListener("visibilitychange", this.onVisibilityChange);
     });
 
-    this.refresh();
+    if (Date.now() - lastRequest >= REFRESH_MS) {
+      this.refresh();
+    }
   }
 
   get tickers() {
@@ -77,7 +87,7 @@ export default class CryptoTickers extends Component {
 
   @bind
   onVisibilityChange() {
-    if (Date.now() - this.lastRequest >= REFRESH_MS) {
+    if (Date.now() - lastRequest >= REFRESH_MS) {
       this.refresh();
     }
   }
@@ -88,7 +98,7 @@ export default class CryptoTickers extends Component {
       return;
     }
 
-    this.lastRequest = Date.now();
+    lastRequest = Date.now();
     const url = new URL(API_URL);
     url.search = new URLSearchParams({
       ids: this.tickers.map((ticker) => ticker.coingecko_id).join(","),
@@ -105,14 +115,14 @@ export default class CryptoTickers extends Component {
       // A failure is handled below: keep the last prices, or hide without any.
     }
 
+    lastQuotes = quotes || lastQuotes;
+
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
 
-    if (quotes) {
-      this.quotes = quotes;
-    }
-    this.failed = !this.quotes;
+    this.quotes = lastQuotes;
+    this.failed = !lastQuotes;
     this.now = Date.now();
   }
 

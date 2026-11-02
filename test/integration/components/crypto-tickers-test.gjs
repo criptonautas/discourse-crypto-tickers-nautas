@@ -2,7 +2,9 @@ import { render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import CryptoTickers from "../../../discourse/components/crypto-tickers";
+import CryptoTickers, {
+  resetCryptoTickersCache,
+} from "../../../discourse/components/crypto-tickers";
 
 const MINUTE = 60 * 1000;
 
@@ -45,6 +47,9 @@ module("Integration | Component | crypto-tickers", function (hooks) {
       { coingecko_id: "not-a-coin", ticker: "BAD", icon: "" },
     ];
     this.fetchStub = sinon.stub(window, "fetch");
+    // A backgrounded test tab would make the component skip its requests.
+    sinon.stub(Document.prototype, "hidden").get(() => false);
+    resetCryptoTickersCache();
   });
 
   hooks.afterEach(function () {
@@ -140,8 +145,9 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     await settled();
 
     const start = Date.now();
-    sinon.stub(Date, "now").returns(start + 6 * MINUTE);
+    const clock = sinon.stub(Date, "now").returns(start + 6 * MINUTE);
     document.dispatchEvent(new Event("visibilitychange"));
+    clock.restore();
     await waitUntil(() => this.fetchStub.callCount === 2);
     // Let the rejected request finish its handler before asserting on the DOM.
     await this.fetchStub.lastCall.returnValue.catch(() => {});
@@ -163,5 +169,19 @@ module("Integration | Component | crypto-tickers", function (hooks) {
     await settled();
 
     assert.strictEqual(this.fetchStub.callCount, 1);
+  });
+
+  test("a remount within five minutes reuses the prices", async function (assert) {
+    this.fetchStub.callsFake(() => jsonResponse(liveQuotes()));
+
+    await render(<template><CryptoTickers /></template>);
+    await waitForQuotes();
+    await settled();
+
+    await render(<template><CryptoTickers /></template>);
+    await settled();
+
+    assert.strictEqual(this.fetchStub.callCount, 1);
+    assert.dom(".crypto-tickers__price").hasText("0.3258");
   });
 });

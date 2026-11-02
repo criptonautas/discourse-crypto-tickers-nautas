@@ -36,7 +36,9 @@ export function toRow(ticker, quote, now) {
 }
 
 export function newestUpdate(quotes) {
-  const times = Object.values(quotes || {}).map((q) => q.last_updated_at);
+  const times = Object.values(quotes || {})
+    .map((q) => q.last_updated_at)
+    .filter(Boolean);
 
   return times.length ? Math.max(...times) * 1000 : null;
 }
