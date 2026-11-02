@@ -5,8 +5,11 @@
 }
 
 .crypto-tickers {
+  // The sidebar's heading rule only reaches a direct child h3, so match it here.
   &__title {
     margin: 0 0 var(--space-2);
+    font-size: var(--font-0);
+    font-weight: 700;
   }
 
   &__list {

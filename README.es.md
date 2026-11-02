@@ -32,7 +32,7 @@ Componente de tema de Discourse que muestra precios cripto actuales en USD desde
 | Necesario | Para qué |
 |---|---|
 | [Right Sidebar Blocks](https://github.com/discourse/discourse-right-sidebar-blocks) | Coloca la tarjeta en la barra lateral |
-| [discourse-phosphor-duotone-icons](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) | Aporta los iconos por defecto, incluido `ph-dt-ingot` para PAXG |
+| [discourse-phosphor-duotone-icons](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) | Aporta los iconos por defecto; este componente incluye `ph-dt-ingot` para PAXG |
 
 ## Instalación
 
@@ -83,6 +83,7 @@ La API sin clave de CoinGecko limita los pedidos por dirección IP y no publica 
 | `javascripts/discourse/components/crypto-tickers.gjs` | Pedidos, actualización y renderizado |
 | `javascripts/discourse/lib/quotes.js` | Formato de precios, dirección y la regla de 15 minutos |
 | `common/common.scss` | Estilos de la tarjeta |
+| `assets/icons-sprite.svg` | El icono `ph-dt-ingot` |
 | `locales/en.yml`, `locales/es.yml` | Textos y descripciones de ajustes |
 | `test/` | Pruebas QUnit unitarias y de integración |
 | `.github/workflows/discourse-theme.yml` | Lint y pruebas en CI |
