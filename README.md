@@ -32,7 +32,7 @@ Discourse theme component showing current crypto prices in USD from CoinGecko, f
 | Needed | Why |
 |---|---|
 | [Right Sidebar Blocks](https://github.com/discourse/discourse-right-sidebar-blocks) | Places the card in the sidebar |
-| [discourse-phosphor-duotone-icons](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) | Provides the default icons, including `ph-dt-ingot` for PAXG |
+| [discourse-phosphor-duotone-icons](https://github.com/criptonautas/discourse-phosphor-duotone-icons) | Provides the default icons, including `ph-dt-ingot` for PAXG |
 
 ## Install
 

@@ -32,7 +32,7 @@ Componente de tema de Discourse que muestra precios cripto actuales en USD desde
 | Necesario | Para qué |
 |---|---|
 | [Right Sidebar Blocks](https://github.com/discourse/discourse-right-sidebar-blocks) | Coloca la tarjeta en la barra lateral |
-| [discourse-phosphor-duotone-icons](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) | Aporta los iconos por defecto, incluido `ph-dt-ingot` para PAXG |
+| [discourse-phosphor-duotone-icons](https://github.com/criptonautas/discourse-phosphor-duotone-icons) | Aporta los iconos por defecto, incluido `ph-dt-ingot` para PAXG |
 
 ## Instalación
 
